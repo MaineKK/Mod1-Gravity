@@ -1,98 +1,103 @@
 class Game {
-    constructor(canvasId) {
-      this.canvas = document.getElementById(canvasId);
-      this.ctx = this.canvas.getContext("2d");
-  
-      this.drawIntervalId = undefined;
-      this.fps = 60;
-  
-      this.background = new Background(this.ctx);
-      this.newton = new Newton(this.ctx, 0, 450);
-      this.apple = this.createApples();
-    }
-  
-    onKeyDown(event) {
-      this.newton.onKeyDown(event);
-      this.newton.startAnimation();
-    }
-    
-    onKeyUp(event) {
-      this.newton.onKeyUp(event);
-      this.newton.stopAnimation();
-    }
-    
-    start() {
-      if (!this.drawIntervalId) {
-        this.drawIntervalId = setInterval(() => {
-          this.clear();
-          this.move();
-          this.draw();
-        }, 1000 / this.fps);
-      }
-    }
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext("2d");
 
-    stop() {
-      clearInterval(this.drawIntervalId);
-      this.drawIntervalId = undefined;
-    }
-  
-    clear() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-    move() {
-      this.newton.move();
-      this.moveApples();
-      this.checkCollision();
-   }
-   createApples() {
-    const apples = [];
-    setInterval(() => {
-      const x = Math.floor(Math.random() * (this.canvas.width - 50));
-      const y = -50; // Comienza en una posición por encima del canvas
-      const vy = Math.floor(Math.random() * 5) + 3; // Velocidad vertical aleatoria
-      const apple = new Apple(this.ctx, x, y, vy);
-      apples.push(apple);
-    }, 1000); // Intervalo de tiempo en milisegundos (1000 ms = 1 segundo)
-    return apples;
+    this.drawIntervalId = undefined;
+    this.fps = 60;
+
+    this.background = new Background(this.ctx);
+    this.newton = new Newton(this.ctx, 0, 450);
+    this.apples = [];
+    this.generateApples();
+    this.start();
   }
-  
+
+  onKeyDown(event) {
+    this.newton.onKeyDown(event);
+  }
+
+  onKeyUp(event) {
+    this.newton.onKeyUp(event);
+  }
+
+  start() {
+    if (!this.drawIntervalId) {
+      this.drawIntervalId = setInterval(() => {
+        this.clear();
+        this.draw();
+        this.move();
+      }, 1000 / this.fps);
+    }
+  }
+
+  stop() {
+    clearInterval(this.drawIntervalId);
+    this.drawIntervalId = undefined;
+  }
+
+  clear() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  move() {
+    this.newton.move();
+    this.moveApples();
+    this.checkCollision();
+  }
+
+  generateApples() {
+    setInterval(() => {
+      const x = Math.random() * (this.canvas.width - 50); // Posición X aleatoria dentro del ancho del canvas
+      const y = -50; // Posición inicial Y arriba del canvas
+      const vy = Math.random() * (5 - 2) + 2; // Velocidad vertical aleatoria entre 2 y 5
+
+      const apple = new Apple(this.ctx, x, y, vy);
+      this.apples.push(apple);
+    }, 2000); // Intervalo de tiempo en milisegundos (2000 ms = 2 segundos)
+  }
 
   checkCollision() {
-    this.apple.forEach((apple) => {
-      if (
-        apple.isVisible &&
-        this.newton.x < apple.x + apple.width &&
-        this.newton.x + this.newton.width > apple.x &&
-        this.newton.y < apple.y + apple.height &&
-        this.newton.y + this.newton.height > apple.y
-      ) {
+    this.apples.forEach((apple, index) => {
+      if (apple.isVisible && this.newton.checkCollisionWithApple(apple)) {
+        this.apples.splice(index, 1);
         this.gameOver();
       }
     });
   }
-    
-   
-    moveApples() {
-      this.apple.forEach((apple) => {
-        apple.y += apple.vy;
-      });
-    }
-    
-  
-    drawApples() {
-      this.apple.forEach((apple) => {
-        apple.draw();
-      });
-    }
   
 
-    draw() {
-      this.clear();
-      this.background.draw();
-      this.drawApples();
-      this.newton.draw();
-    
-    }
-  
+  gameOver() {
+    this.stop();
+    console.log("GAME OVER");
+  }
+
+  moveApples() {
+    this.apples.forEach((apple) => {
+      apple.update();
+    });
+  }
+
+  drawApples() {
+    this.apples.forEach((apple) => {
+      apple.draw();
+    });
+  }
+
+  draw() {
+    this.clear();
+    this.background.draw();
+    this.drawApples();
+    this.newton.draw();
+  }
 }
-  
+
+// Función para verificar la colisión entre dos objetos rectangulares
+function checkRectCollision(rect1, rect2) {
+  return (
+    rect1.x < rect2.x + rect2.w &&
+    rect1.x + rect1.w > rect2.x &&
+    rect1.y < rect2.y + rect2.h &&
+    rect1.y + rect1.h > rect2.y
+  );
+}

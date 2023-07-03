@@ -16,21 +16,8 @@ class Apple {
   
     update() {
       this.y += this.vy;
-      this.checkCollision();
     }
   
-    checkCollisionWithNewton(newton) {
-        if (
-          this.isVisible &&
-          this.x < newton.x + newton.width &&
-          this.x + this.width > newton.x &&
-          this.y < newton.y + newton.height &&
-          this.y + this.height > newton.y
-        ) {
-          return true; // Hay una colisión
-        }
-        return false; // No hay colisión
-      }
   
     draw() {
       if (this.sprite.isReady) {
