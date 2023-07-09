@@ -1,37 +1,28 @@
  class Coin {
-        constructor(ctx, canvasWidth, canvasHeight) {
+        constructor(ctx, x, y) {
           this.ctx = ctx;
-          this.canvasWidth = canvasWidth;
-          this.canvasHeight = canvasHeight;
-          this.width = 40;
-          this.height = 40;
-          this.x = this.getRandomX();
-          this.y = this.getRandomY();
-          this.visible = true;
-          this.collectedCount = 0;
+          this.x = x;
+          this.y = y;
+          this.w = Math.floor(50);
+          this.h = Math.floor(50);
       
-          this.image = new Image();
-          this.image.src = "assets/img/coin.png";
-          this.image.onload = () => {
-            this.image.isReady = true;
+          this.sprite = new Image();
+          this.sprite.src = "assets/img/coin.png";
+          this.sprite.onload = () => {
+            this.sprite.isReady = true;
           };
+          this.visible = true;
         }
-      
-        getRandomX() {
-          return Math.random() * (this.canvasWidth - this.width);
-        }
-      
-        getRandomY() {
-          return Math.random() * (this.canvasHeight - this.height);
-        }
-      
-        update() {
-          
-        }
+
       
         draw() {
-          if (this.visible && this.image.isReady) {
-            this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+          if (this.visible && this.sprite.isReady) {
+            this.ctx.drawImage(
+            this.sprite, 
+            this.x,
+            this.y,
+            this.w,
+            this.h);
           }
         }
       }

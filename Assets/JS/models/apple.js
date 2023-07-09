@@ -5,8 +5,8 @@ class Apple {
     this.y = y;
     this.vy = vy;
     
-    this.w = Math.floor(50);
-    this.h = Math.floor(60);
+    this.w = Math.floor(40);
+    this.h = Math.floor(50);
     this.vy = Math.floor(Math.random() * 3) + 1;
     this.apples = apples;
     this.newton = newton;

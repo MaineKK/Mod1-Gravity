@@ -9,7 +9,17 @@ class Game {
     this.background = new Background(this.ctx);
     this.newton = new Newton(this.ctx, 0, 450);
     this.apples = [];
+    this.coin = new Coin(this.ctx, 0, this.canvas.height - 50);
+    
+    
     this.generateApples();
+    this.generateCoin();
+    this.coinCount = -1;
+    
+    this.coinSound = new Audio("assets/audio/coin-sound.mp3");
+    this.gameOverSound = new Audio("assets/audio/gameover.mp3");
+
+    
   }
 
   onKeyDown(event) {
@@ -47,13 +57,20 @@ class Game {
     setInterval(() => {
       const x = Math.random() * (this.canvas.width - 40); // Posición X aleatoria dentro del ancho del canvas
       const y = -40; // Posición inicial Y arriba del canvas
-      const vy = Math.random() * (6 - 2) + 2; // Velocidad vertical aleatoria entre 2 y 5
+      const vy = Math.random() * (5 - 2) + 2; // Velocidad vertical aleatoria entre 2 y 5
 
       const apple = new Apple(this.ctx, x, y, vy);
       this.apples.push(apple);
-    }, 1000); // Intervalo de tiempo en milisegundos (2000 ms = 2 segundos)
+    }, 2000); // Intervalo de tiempo en milisegundos (2000 ms = 2 segundos)
   }
-  
+  generateCoin() {
+    setInterval(() => {
+      const x = Math.random() * (this.canvas.width - 50); 
+      const y = this.canvas.height - 50; 
+
+      this.coin = new Coin(this.ctx, x, y);
+    }, 5000); 
+  }
 
   moveApples() {
     this.apples.forEach((apple) => {
@@ -71,11 +88,41 @@ class Game {
         apple.y < this.newton.y + this.newton.h &&
         apple.y + apple.h > this.newton.y
       ) {
+        this.playGameOverSound();
         this.stop();
         alert("Game Over");
+        
       }
     }
+
+    if (
+      this.coin.x < this.newton.x + this.newton.w &&
+      this.coin.x + this.coin.w > this.newton.x &&
+      this.coin.y < this.newton.y + this.newton.h &&
+      this.coin.y + this.coin.h > this.newton.y &&
+      this.coin.visible
+    ) {
+      this.coinCount++;
+
+      if (this.coinCount === 15) {
+        this.stop();
+        alert("You Win!");
+      }
+
+      this.coin.visible = false;
+      this.playCoinSound();
+    }
   }
+  playCoinSound() {
+    this.coinSound.currentTime = 1;
+    this.coinSound.play();
+  }
+
+  playGameOverSound() {
+    this.gameOverSound.currentTime = 0;
+    this.gameOverSound.play();
+  }
+
 
   drawApples() {
     this.apples.forEach((apple) => {
@@ -88,5 +135,13 @@ class Game {
     this.background.draw();
     this.newton.draw(); 
     this.drawApples(); 
+    this.coin.draw();
+    this.drawCoinCount();
+  }
+
+  drawCoinCount() {
+    this.ctx.font = "20px Arial";
+    this.ctx.fillStyle = "white";
+    this.ctx.fillText(`Coins: ${this.coinCount}`, 10, 30);
   }
 }

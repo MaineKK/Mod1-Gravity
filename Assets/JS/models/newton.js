@@ -6,8 +6,8 @@ class Newton {
 
       this.x = x;
       this.y = y;
-      this.w = Math.floor(200 / 2);
-      this.h = Math.floor(161 / 2);
+      this.w = Math.floor(120 / 2);
+      this.h = Math.floor(200/ 2);
       this.h0 = this.h;
 
       this.vx = 0;
@@ -15,10 +15,10 @@ class Newton {
       this.ay = NEWTON_AY;
 
       this.sprite = new Image ();
-      this.sprite.src ="assets/img/newton.png";
+      this.sprite.src ="assets/img/newton1.png";
       this.sprite.verticalFrames = 1;
       this.sprite.verticalFrameIndex = 0;
-      this.sprite.horizontalFrames = 3;
+      this.sprite.horizontalFrames = 1;
       this.sprite.horizontalFrameIndex = 0;
 
       this.sprite.onload = () => {
@@ -28,7 +28,7 @@ class Newton {
           this.sprite.frameHeight = Math.floor(
             this.sprite.height / this.sprite.verticalFrames);
         };
-      this.animationTick = 0;
+      //this.animationTick = 0;
     
       this.gameOver = false;
     }
@@ -92,12 +92,12 @@ class Newton {
           this.h
         );
 
-        this.animate();
+        //this.animate();
       }
   }
   
 
-  animate() {
+  /*animate() {
       this.animationTick++;
   
       if (this.animationTick > 10) {
@@ -108,6 +108,6 @@ class Newton {
               this.sprite.horizontalFrameIndex = 0;
           }
       }
-  }
+  }*/
   
 }
