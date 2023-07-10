@@ -18,6 +18,7 @@ class Game {
     
     this.coinSound = new Audio("assets/audio/coin-sound.mp3");
     this.gameOverSound = new Audio("assets/audio/gameover.mp3");
+    this.winnerSound = new Audio("assets/audio/winner.mp3");
 
     
   }
@@ -30,6 +31,7 @@ class Game {
     this.newton.onKeyUp(event);
   }
 
+ 
   start() {
     if (!this.drawIntervalId) {
       this.drawIntervalId = setInterval(() => {
@@ -90,7 +92,7 @@ class Game {
       ) {
         this.playGameOverSound();
         this.stop();
-        alert("Game Over");
+        this.showGameOverImage();
         
       }
     }
@@ -104,9 +106,10 @@ class Game {
     ) {
       this.coinCount++;
 
-      if (this.coinCount === 15) {
+      if (this.coinCount === 5) {
+        this.playWinnerSound();
         this.stop();
-        alert("You Win!");
+        this.showWinImage();
       }
 
       this.coin.visible = false;
@@ -123,6 +126,34 @@ class Game {
     this.gameOverSound.play();
   }
 
+  playWinnerSound() {
+    this.winnerSound.currentTime = 0;
+    this.winnerSound.play();
+  }
+
+  showGameOverImage() {
+    const gameOverImage = new Image();
+    gameOverImage.src = "assets/img/gameover.png";
+    gameOverImage.onload = () => {
+      this.ctx.drawImage(
+        gameOverImage,
+        this.canvas.width / 2 - gameOverImage.width / 2,
+        this.canvas.height / 2 - gameOverImage.height / 2
+      );
+    };
+  }
+
+  showWinImage() {
+    const winImage = new Image();
+    winImage.src = "assets/img/winner.png";
+    winImage.onload = () => {
+      this.ctx.drawImage(
+        winImage,
+        this.canvas.width / 2 - winImage.width / 2,
+        this.canvas.height / 2 - winImage.height / 2
+      );
+    };
+  }
 
   drawApples() {
     this.apples.forEach((apple) => {

@@ -1,3 +1,18 @@
 canvas {
     border: 1px solid black;
-  }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url("../img/Background.png");
+    background-size: cover;
+    background-position: center;
+}
+
+#start-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+ 
+}
