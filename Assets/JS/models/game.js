@@ -12,10 +12,13 @@ class Game {
     this.coin = new Coin(this.ctx, 0, this.canvas.height - 50);
     
     
-    this.generateApples();
+    
     this.generateCoin();
     this.coinCount = -1;
     
+    this.backgroundMusic = new Audio("assets/audio/backgroundsound.mp3");
+    this.backgroundMusic.loop = true;
+
     this.coinSound = new Audio("assets/audio/coin-sound.mp3");
     this.gameOverSound = new Audio("assets/audio/gameover.mp3");
     this.winnerSound = new Audio("assets/audio/winner.mp3");
@@ -36,6 +39,7 @@ class Game {
     if (!this.drawIntervalId) {
       this.drawIntervalId = setInterval(() => {
         this.clear();
+        this.backgroundMusic.play();
         this.move();
         this.draw();
       }, 1000 / this.fps);
@@ -45,6 +49,8 @@ class Game {
   stop() {
     clearInterval(this.drawIntervalId);
     this.drawIntervalId = undefined;
+    this.backgroundMusic.pause();
+    this.backgroundMusic.currentTime = 0;
   }
 
   clear() {
@@ -57,13 +63,16 @@ class Game {
   }
   generateApples() {
     setInterval(() => {
-      const x = Math.random() * (this.canvas.width - 40); // Posición X aleatoria dentro del ancho del canvas
-      const y = -40; // Posición inicial Y arriba del canvas
-      const vy = Math.random() * (5 - 2) + 2; // Velocidad vertical aleatoria entre 2 y 5
+    const sectionWidth = this.canvas.width / 10; // Dividir el ancho del canvas en x secciones
+    const sectionIndex = Math.floor(Math.random() * 10); // Generar un índice de sección aleatorio
+
+    const x = (sectionIndex * sectionWidth) + (Math.random() * sectionWidth); // Generar coordenada X dentro de la sección
+    const y = -40;
+    const vy = Math.random() * (30 - 10) + 10; // Velocidad vertical aleatoria
 
       const apple = new Apple(this.ctx, x, y, vy);
       this.apples.push(apple);
-    }, 2000); // Intervalo de tiempo en milisegundos (2000 ms = 2 segundos)
+    }, 1000); // Intervalo de tiempo en milisegundos (1000 ms = 1 segundos)
   }
   generateCoin() {
     setInterval(() => {
@@ -71,7 +80,7 @@ class Game {
       const y = this.canvas.height - 50; 
 
       this.coin = new Coin(this.ctx, x, y);
-    }, 5000); 
+    }, 3000); 
   }
 
   moveApples() {
@@ -106,7 +115,7 @@ class Game {
     ) {
       this.coinCount++;
 
-      if (this.coinCount === 5) {
+      if (this.coinCount === 8) {
         this.playWinnerSound();
         this.stop();
         this.showWinImage();

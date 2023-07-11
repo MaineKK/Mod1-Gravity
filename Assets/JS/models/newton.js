@@ -28,7 +28,7 @@ class Newton {
           this.sprite.frameHeight = Math.floor(
             this.sprite.height / this.sprite.verticalFrames);
         };
-      //this.animationTick = 0;
+      //this.animationTick = 0; DESACTIVADO
     
       this.gameOver = false;
     }
@@ -95,7 +95,7 @@ class Newton {
         //this.animate();
       }
   }
-  
+  //Desactivo la animación del personaje porque no me gusta visualmente y causa problemas con el choque de manzanas.
 
   /*animate() {
       this.animationTick++;

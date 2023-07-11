@@ -16,5 +16,7 @@ window.addEventListener("keyup", (event) => {
   startButton.addEventListener("click", () => {
     startButton.style.display = "none"; 
     game.start(); 
+
+    game.generateApples();
   });
 
